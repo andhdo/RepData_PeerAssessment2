@@ -1,0 +1,116 @@
+---
+title: "Weather events and its health and economic consequences in public health and ecomomy"
+author: "by andhdo"
+description: "Coursera's Reproducible Research Course, NOOA storm db assignment 2" 
+output: 
+  html_document:
+    keep_md: true
+
+---
+[WORK IN PROGRESS]
+
+# Preliminars
+
+### Synopsys
+NOOA (National Oceanic and Atmospheric Administration) is an U.S institute that collects data about weather events around hundred of years and joining this information with economic and health prolems reported.
+
+With information of NOOA from the year 1950 to November 2011, this project demonstrates that this kind of weather events has been responsible to the most impactant consequences in ecomonic and health life oc people in the U.S.
+
+# Data Processing
+
+### Preparation of the environment 
+
+Source data for this exercise are downloaded from Coursera's RepResearch website.
+Let's start declaring some global names about the location of files
+
+```{r}
+
+# declare global names
+target_zip_dir <- "."
+target_zip_filename <- "repdata_data_StormData"
+target_zip_complete <- paste0(target_zip_dir,'/',target_zip_filename, '.csv.bz2')
+source_zip_file <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+subset_filename <- "_subset_data.csv"
+all_dataset_filename <- paste0(target_zip_filename,'.csv')
+```
+
+### Loading the data
+
+Using auxiliar functions to download and load the file, Let's start reading the dataset
+
+```{r}
+
+# download the file & uncompress it
+download_raw_package <- function() {
+  
+  # set the download params
+  
+  # if extraction folder exists, skip
+  if(!file.exists(target_zip_complete)) {
+    dir.create(target_zip_dir,recursive = TRUE)
+    if(!file.exists(target_zip_complete)) {
+      download.file(source_zip_file,destfile=target_zip_complete)  
+    } 
+  }
+}
+
+load_data <- function() {
+  
+  csv_handle <- bzfile(target_zip_complete,all_dataset_filename)
+  
+  # read the raw dataset
+  tmp_dataset <- read.csv2(csv_handle, sep = ",", stringsAsFactors = FALSE)
+  
+  unlink(csv_handle)
+
+  tmp_dataset$EVTYPE = toupper(tmp_dataset$EVTYPE)
+  tmp_dataset
+  
+}
+
+# execution of download
+download_raw_package()
+
+# loading the dataset
+all_dataset <- load_data()
+
+# 
+
+```
+
+
+### Review of the dataset
+Let's expore some basic information of the dataset as it's structure:
+
+```{r}
+str(all_dataset)
+```
+and its basic statistics per variable
+
+```{r}
+summary(all_dataset)
+```
+
+
+eventtype <- sort(unique(all_dataset$EVTYPE))
+
+
+# Results
+
+Reproducible Research: Peer Assessment 2
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
